@@ -83,6 +83,8 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
+-- LSP Validation speed
+local feedbackspeed = 75
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -91,7 +93,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -165,6 +167,9 @@ vim.o.scrolloff = 10
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
+
+-- Relative numbers
+vim.opt.relativenumber = true
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -436,6 +441,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>km', builtin.keymaps, { desc = '[ ] Lists all keymaps' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -673,7 +679,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -681,13 +687,68 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
-        --
-
+        ts_ls = {
+          flags = {
+            debounce_text_changes = feedbackspeed,
+          },
+          settings = {
+            implicitProjectConfiguration = {
+              checkJs = true,
+            },
+          },
+        },
+        intelephense = {
+          flags = {
+            debounce_text_changes = feedbackspeed,
+          },
+        },
+        pyright = {
+          flags = {
+            debounce_text_changes = feedbackspeed,
+          },
+        },
+        cssls = {
+          flags = {
+            debounce_text_changes = feedbackspeed,
+          },
+        },
+        somesass_ls = {
+          flags = {
+            debounce_text_changes = feedbackspeed,
+          },
+        },
+        html = {
+          flags = {
+            debounce_text_changes = feedbackspeed,
+          },
+        },
+        bashls = {
+          flags = {
+            debounce_text_changes = feedbackspeed,
+          },
+        },
+        tailwindcss = {
+          flags = {
+            debounce_text_changes = feedbackspeed,
+          },
+        },
+        yamlls = {
+          flags = {
+            debounce_text_changes = feedbackspeed,
+          },
+        },
+        jsonls = {
+          flags = {
+            debounce_text_changes = feedbackspeed,
+          },
+        },
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
           -- capabilities = {},
+          flags = {
+            debounce_text_changes = feedbackspeed,
+          },
           settings = {
             Lua = {
               completion = {
@@ -756,7 +817,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = { c = true, cpp = true, php = true, xml = true }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
@@ -772,7 +833,7 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { "prettierd", "prettier", stop_after_first = true },
       },
     },
   },
@@ -814,6 +875,8 @@ require('lazy').setup({
     --- @type blink.cmp.Config
     opts = {
       keymap = {
+            ['enter'] = 'select_item',
+
         -- 'default' (recommended) for mappings similar to built-in completions
         --   <c-y> to accept ([y]es) the completion.
         --    This will auto-import if your LSP supports it.
@@ -881,20 +944,25 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    --'folke/tokyonight.nvim',
+    'ellisonleao/gruvbox.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
-        },
+      --require('tokyonight').setup {
+      --  styles = {
+      --    comments = { italic = false }, -- Disable italics in comments
+      --  },
+      --}
+      require('gruvbox').setup {
+        contrast = 'hard',
+        transparent_mode = true,
       }
 
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'gruvbox'
     end,
   },
 
@@ -944,7 +1012,31 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'php',
+        'dockerfile',
+        'jsdoc',
+        'css',
+        'ssh_config',
+        'yaml',
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc'
+         'javascript',
+        'typescript',
+        'json',
+        'nginx',
+        'python',
+        'tsx',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -976,9 +1068,12 @@ require('lazy').setup({
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+   require 'kickstart.plugins.autopairs',
+   require 'kickstart.plugins.neo-tree',
+   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  -- Custom
+  require 'custom.remaps'
+  require 'custom.plugins.wordpress'
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.

@@ -15,7 +15,24 @@ return {
   },
   opts = {
     filesystem = {
+      filtered_items = {
+        visible = false,
+        hide_dotfiles = false,
+        hide_gitignored = false,
+        hide_by_name = {
+          'node_modules',
+          '.vscode',
+          '.git',
+          '.github',
+          '.DS_Store',
+          '.idea',
+        },
+        always_show = {
+          'local_config.php',
+        },
+      },
       window = {
+        position = 'right',
         mappings = {
           ['\\'] = 'close_window',
         },
