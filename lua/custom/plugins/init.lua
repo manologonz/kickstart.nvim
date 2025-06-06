@@ -6,5 +6,4 @@ return {
   require 'custom.plugins.nvim-bqf',
   require 'custom.plugins.git-blame',
   require 'custom.plugins.tmux',
-  require 'custom.plugins.catppuccin',
 }
