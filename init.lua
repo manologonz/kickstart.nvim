@@ -171,6 +171,9 @@ vim.o.confirm = true
 -- Relative numbers
 vim.opt.relativenumber = true
 
+-- No Wrap
+vim.o.wrap = false
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -833,7 +836,7 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { "prettierd", "prettier", stop_after_first = true },
+        --javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -952,15 +955,13 @@ require('lazy').setup({
       --    comments = { italic = false }, -- Disable italics in comments
       --  },
       --}
-      require('gruvbox').setup {
-        contrast = 'hard',
-        transparent_mode = true,
-      }
+      require('catppuccin').setup {}
 
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'gruvbox'
+      -- Theme
+      vim.cmd.colorscheme 'catppuccin-frappe'
     end,
   },
 
@@ -1064,11 +1065,12 @@ require('lazy').setup({
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
   -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
-   require 'kickstart.plugins.autopairs',
-   require 'kickstart.plugins.neo-tree',
-   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'custom.plugins',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1104,7 +1106,6 @@ require('lazy').setup({
 
 require 'custom.remaps'
 --require 'custom.plugins.wordpress',
-
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
