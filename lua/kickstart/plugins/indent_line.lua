@@ -15,7 +15,6 @@ return {
     opts = {
       indent = {
         highlight = highlight,
-        char = '|',
       },
     },
     config = function(_, opts)
