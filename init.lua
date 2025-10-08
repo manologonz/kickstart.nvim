@@ -697,7 +697,6 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -716,6 +715,11 @@ require('lazy').setup({
           },
         },
         intelephense = {
+          flags = {
+            debounce_text_changes = feedbackspeed,
+          },
+        },
+        phpactor = {
           flags = {
             debounce_text_changes = feedbackspeed,
           },
@@ -967,7 +971,15 @@ require('lazy').setup({
     name = 'catppuccin',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
-      require('catppuccin').setup {}
+      require('catppuccin').setup {
+        flavour = 'frappe',
+        float = {
+          transparent = false,
+          solid = true,
+          enabled = true,
+          border = 'rounded',
+        },
+      }
 
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
@@ -1066,6 +1078,7 @@ require('lazy').setup({
     --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
+  { 'bitpoke/wordpress.nvim' },
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
@@ -1117,7 +1130,6 @@ require('lazy').setup({
 })
 
 require 'custom.remaps'
---require 'custom.plugins.wordpress',
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
